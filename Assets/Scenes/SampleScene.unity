@@ -3317,20 +3317,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WalkSpeed: 2
-  RunSpeed: 5
+  RunSpeed: 6
   MoveSpeed: 2
   JumpSpeed: 4
   _verticalVelocity: 0
   Gravity: -10
-  Coin: 0
-  IsPlayer: 1
   AttackSlideDuration: 0.4
   AttackSlideSpeed: 0.06
-  IsInvincible: 0
-  invincibleDuration: 2
-  SlideSpeed: 9
   CurrentState: 0
-  SpawnDuration: 2
   ItemToDrop: {fileID: 0}
 --- !u!114 &1053660431
 MonoBehaviour:
