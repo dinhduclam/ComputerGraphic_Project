@@ -36,6 +36,6 @@ public class PlayerInput : MonoBehaviour
         Run = false;
         HorizontalInput = 0;
         verticalInput = 0;
-        
+
     }
 }
