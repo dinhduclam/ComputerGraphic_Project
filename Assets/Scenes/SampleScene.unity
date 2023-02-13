@@ -3319,7 +3319,7 @@ MonoBehaviour:
   WalkSpeed: 2
   RunSpeed: 6
   MoveSpeed: 2
-  JumpSpeed: 4
+  JumpSpeed: 2
   _verticalVelocity: 0
   Gravity: -10
   AttackSlideDuration: 0.4
@@ -3339,11 +3339,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HorizontalInput: 0
-  verticalInput: 0
+  VerticalInput: 0
   MouseButtonDown: 0
-  SpaceKey: 0
+  SpaceKeyDown: 0
   Run: 0
-  Jump: 0
 --- !u!143 &1053660432
 CharacterController:
   m_ObjectHideFlags: 0
