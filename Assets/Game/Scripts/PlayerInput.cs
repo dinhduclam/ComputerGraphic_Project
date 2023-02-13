@@ -5,11 +5,10 @@ using UnityEngine;
 public class PlayerInput : MonoBehaviour
 {
     public float HorizontalInput;
-    public float verticalInput;
+    public float VerticalInput;
     public bool MouseButtonDown;
-    public bool SpaceKey;
+    public bool SpaceKeyDown;
     public bool Run;
-    public bool Jump;
 
     // Update is called once per frame
     void Update()
@@ -18,10 +17,14 @@ public class PlayerInput : MonoBehaviour
         {
             MouseButtonDown = Input.GetMouseButtonDown(0);
         }
-        SpaceKey = Input.GetKey(KeyCode.Space);
+        if (!SpaceKeyDown && Time.timeScale != 0)
+        {
+            SpaceKeyDown = Input.GetKeyDown(KeyCode.Space);
+        }
+        
         Run = Input.GetKey(KeyCode.LeftShift);
         HorizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
+        VerticalInput = Input.GetAxisRaw("Vertical");
     }
 
     private void OnDisable()
@@ -32,10 +35,9 @@ public class PlayerInput : MonoBehaviour
     public void ClearCache()
     {
         MouseButtonDown = false;
-        SpaceKey = false;
+        SpaceKeyDown = false;
         Run = false;
         HorizontalInput = 0;
-        verticalInput = 0;
-
+        VerticalInput = 0;
     }
 }

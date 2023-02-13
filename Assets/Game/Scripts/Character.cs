@@ -7,7 +7,7 @@ public class Character : MonoBehaviour
     private Animator _animator;
     private PlayerInput _playerInput;
 
-    public float WalkSpeed = 2f;
+    public float WalkSpeed = 3f;
     public float RunSpeed = 6f;
     public float MoveSpeed = 2f;
     public float JumpSpeed = 2f;
@@ -24,7 +24,7 @@ public class Character : MonoBehaviour
     //State Machine
     public enum PlayerState
     {
-        Normal, Attacking, Dead, BeingHit
+        Normal, Jump, Attacking, Dead, BeingHit
     }
     public PlayerState CurrentState;
 
@@ -39,26 +39,16 @@ public class Character : MonoBehaviour
 
     private void CalculatePlayerMovement()
     {
-        _movementVelocity.Set(_playerInput.HorizontalInput, 0f, _playerInput.verticalInput);
+        _movementVelocity.Set(_playerInput.HorizontalInput, 0f, _playerInput.VerticalInput);
         _movementVelocity.Normalize();
         _movementVelocity = Quaternion.Euler(0, -45f, 0) * _movementVelocity;
 
         MoveSpeed = WalkSpeed;
 
-        if (_cc.isGrounded)
+        if (_cc.isGrounded && _playerInput.Run)
         {
-            if (_playerInput.Run)
-            {
-                MoveSpeed = RunSpeed;
-                _animator.SetBool("Run", true);
-            }
-            else
-            {
-                _animator.SetBool("Run", false);
-            }
+            MoveSpeed = RunSpeed;
         }
-
-        Debug.Log(_movementVelocity.magnitude);
 
         _animator.SetFloat("Speed", _movementVelocity.magnitude * MoveSpeed);
 
@@ -68,32 +58,39 @@ public class Character : MonoBehaviour
 
     private void FixedUpdate()
     {
-        CalculatePlayerMovement();
-
-        if (_cc.isGrounded && _playerInput.MouseButtonDown)
+        switch (CurrentState)
         {
-            SwitchState(PlayerState.Attacking);
+            case PlayerState.Normal:
+                _movementVelocity = Vector3.zero;
+                CalculatePlayerMovement();
+                
+                if (_cc.isGrounded)
+                {
+                    if (_playerInput.MouseButtonDown)
+                    {
+                        SwitchState(PlayerState.Attacking);
+                        return;
+                    }
+
+                    if (_playerInput.SpaceKeyDown)
+                    {
+                        SwitchState(PlayerState.Jump);
+                        return;
+                    }
+                }
+                break;
+
+            case PlayerState.Jump:
+                break;
         }
+
+        _movementVelocity.y = _verticalVelocity;
+        _cc.Move(_movementVelocity * MoveSpeed * Time.deltaTime);
 
         if (_cc.isGrounded == false)
             _verticalVelocity += Gravity * Time.deltaTime;
-        else _verticalVelocity = 0;
-
-
-        if (_playerInput.SpaceKey)
-        {
-            if (_cc.isGrounded)
-            {
-                _verticalVelocity += JumpSpeed;
-                _animator.SetBool("Jump", true);
-            }
-        }
-        else _animator.SetBool("Jump", false);
-
-        _movementVelocity.y = _verticalVelocity;
-
-        _cc.Move(_movementVelocity * MoveSpeed * Time.deltaTime);
-        _movementVelocity = Vector3.zero;
+        else
+            _verticalVelocity = 0;
     }
 
     private void SwitchState(PlayerState newState)
@@ -104,11 +101,12 @@ public class Character : MonoBehaviour
             case PlayerState.Normal:
                 break;
 
+            case PlayerState.Jump:
+                _playerInput.SpaceKeyDown = false;
+                break;
+                        
             case PlayerState.Attacking:
-
-                //if (_damageCaster != null)
-                //    _damageCaster.DisableDamageCaster();
-
+                _playerInput.MouseButtonDown = false;
                 break;
 
             case PlayerState.Dead:
@@ -124,9 +122,13 @@ public class Character : MonoBehaviour
             case PlayerState.Normal:
                 break;
 
+            case PlayerState.Jump:
+                _verticalVelocity += MoveSpeed > 5f? 2.5f : 4f;
+                _animator.SetTrigger("Jump");
+                break;
+
             case PlayerState.Attacking:
                 _animator.SetTrigger("Attack");
-                _playerInput.MouseButtonDown = false;
                 break;
 
             case PlayerState.Dead:
@@ -143,5 +145,15 @@ public class Character : MonoBehaviour
         CurrentState = newState;
 
         Debug.Log("Switched to " + CurrentState);
+    }
+
+    public void FinishAttack()
+    {
+        SwitchState(PlayerState.Normal);
+    }
+
+    public void FinishJump() 
+    {
+        SwitchState(PlayerState.Normal);
     }
 }
