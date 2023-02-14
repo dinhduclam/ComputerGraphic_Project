@@ -18,8 +18,8 @@ public class Character : MonoBehaviour
 
     //Player slides
     private float attackStartTime;
-    public float AttackSlideDuration = 0.4f;
-    public float AttackSlideSpeed = 0.06f;
+    public float AttackSlideDuration = 1.5f;
+    public float AttackSlideSpeed = 2f;
 
     //State Machine
     public enum PlayerState
@@ -80,7 +80,14 @@ public class Character : MonoBehaviour
                 }
                 break;
 
-            case PlayerState.Jump:
+            case PlayerState.Attacking:
+                _movementVelocity = Vector3.zero;
+                //if (Time.time < attackStartTime + AttackSlideDuration)
+                //{
+                //    float timePassed = Time.time - attackStartTime;
+                //    float lerpTime = timePassed / AttackSlideDuration;
+                //    _movementVelocity = Vector3.Lerp(transform.forward * AttackSlideSpeed, Vector3.zero, lerpTime);
+                //}
                 break;
         }
 
@@ -129,6 +136,7 @@ public class Character : MonoBehaviour
 
             case PlayerState.Attacking:
                 _animator.SetTrigger("Attack");
+                //attackStartTime = Time.time;
                 break;
 
             case PlayerState.Dead:
