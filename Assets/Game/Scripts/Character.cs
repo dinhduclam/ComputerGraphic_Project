@@ -6,6 +6,7 @@ public class Character : MonoBehaviour
     private CharacterController _cc;
     private Animator _animator;
     private PlayerInput _playerInput;
+    private PlayerDamageCaster _playerDamageCaster;
 
     public float WalkSpeed = 3f;
     public float RunSpeed = 6f;
@@ -16,11 +17,6 @@ public class Character : MonoBehaviour
 
     private Vector3 _movementVelocity;
 
-    //Player slides
-    private float attackStartTime;
-    public float AttackSlideDuration = 1.5f;
-    public float AttackSlideSpeed = 2f;
-
     //State Machine
     public enum PlayerState
     {
@@ -28,32 +24,16 @@ public class Character : MonoBehaviour
     }
     public PlayerState CurrentState;
 
-    public GameObject ItemToDrop;
+    //Health
+    public int MaxHealth = 100;
+    public int Health = 100;
 
     private void Awake()
     {
         _cc = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
         _playerInput = GetComponent<PlayerInput>();
-    }
-
-    private void CalculatePlayerMovement()
-    {
-        _movementVelocity.Set(_playerInput.HorizontalInput, 0f, _playerInput.VerticalInput);
-        _movementVelocity.Normalize();
-        _movementVelocity = Quaternion.Euler(0, -45f, 0) * _movementVelocity;
-
-        MoveSpeed = WalkSpeed;
-
-        if (_cc.isGrounded && _playerInput.Run)
-        {
-            MoveSpeed = RunSpeed;
-        }
-
-        _animator.SetFloat("Speed", _movementVelocity.magnitude * MoveSpeed);
-
-        if (_movementVelocity != Vector3.zero)
-            transform.rotation = Quaternion.LookRotation(_movementVelocity);
+        _playerDamageCaster = GetComponentInChildren<PlayerDamageCaster>();
     }
 
     private void FixedUpdate()
@@ -62,8 +42,20 @@ public class Character : MonoBehaviour
         {
             case PlayerState.Normal:
                 _movementVelocity = Vector3.zero;
-                CalculatePlayerMovement();
-                
+                _movementVelocity.Set(_playerInput.HorizontalInput, 0f, _playerInput.VerticalInput);
+                _movementVelocity.Normalize();
+                _movementVelocity = Quaternion.Euler(0, -45f, 0) * _movementVelocity;
+
+                MoveSpeed = WalkSpeed;
+                if (_cc.isGrounded && _playerInput.Run)
+                {
+                    MoveSpeed = RunSpeed;
+                }
+                _animator.SetFloat("Speed", _movementVelocity.magnitude * MoveSpeed);
+
+                if (_movementVelocity != Vector3.zero)
+                    transform.rotation = Quaternion.LookRotation(_movementVelocity);
+
                 if (_cc.isGrounded)
                 {
                     if (_playerInput.MouseButtonDown)
@@ -82,12 +74,6 @@ public class Character : MonoBehaviour
 
             case PlayerState.Attacking:
                 _movementVelocity = Vector3.zero;
-                //if (Time.time < attackStartTime + AttackSlideDuration)
-                //{
-                //    float timePassed = Time.time - attackStartTime;
-                //    float lerpTime = timePassed / AttackSlideDuration;
-                //    _movementVelocity = Vector3.Lerp(transform.forward * AttackSlideSpeed, Vector3.zero, lerpTime);
-                //}
                 break;
         }
 
@@ -163,5 +149,20 @@ public class Character : MonoBehaviour
     public void FinishJump() 
     {
         SwitchState(PlayerState.Normal);
+    }
+
+    public void ApplyDamage(int damage)
+    {
+        Health -= damage;
+    }
+
+    public void EnableDamageCaster()
+    {
+        _playerDamageCaster.EnableDamageCaster();
+    }
+
+    public void DisableDamageCaster()
+    {
+        _playerDamageCaster.DisableDamageCaster();
     }
 }
