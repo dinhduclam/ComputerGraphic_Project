@@ -17,7 +17,8 @@ public class PlayerDamageCaster : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (_damagedTargetList.Contains(other))
+        Debug.Log(other.tag);
+        if (!_damagedTargetList.Contains(other))
         {
             var targetCC = other.GetComponent<Character>(); //TODO: replace with Enemy
 
