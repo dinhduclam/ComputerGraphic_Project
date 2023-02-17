@@ -11,7 +11,8 @@ public class Character : MonoBehaviour
     public float WalkSpeed = 3f;
     public float RunSpeed = 6f;
     public float MoveSpeed = 2f;
-    public float JumpSpeed = 2f;
+    public float WalkingJump = 2f;
+    public float RuningJump = 6f;
     public float _verticalVelocity = 0f;
     public float Gravity = -9.8f;
 
@@ -116,7 +117,7 @@ public class Character : MonoBehaviour
                 break;
 
             case PlayerState.Jump:
-                _verticalVelocity += MoveSpeed > 5f? 2.5f : 4f;
+                _verticalVelocity += MoveSpeed == WalkSpeed? WalkingJump : RuningJump;
                 _animator.SetTrigger("Jump");
                 break;
 

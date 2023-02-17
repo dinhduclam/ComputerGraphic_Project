@@ -1858,7 +1858,8 @@ MonoBehaviour:
   WalkSpeed: 2
   RunSpeed: 6
   MoveSpeed: 2
-  JumpSpeed: 2
+  WalkingJump: 3
+  RuningJump: 3
   _verticalVelocity: 0
   Gravity: -10
   CurrentState: 0
