@@ -16,10 +16,10 @@ public class UI_Handler : MonoBehaviour
     public GameObject OptionMenu;
     public GameObject PauseMenu;
 
-    //void Awake()
-    //{
-
-    //}
+    void Awake()
+    {
+        Time.timeScale = 0f;
+    }
 
     // Update is called once per frame
     void Update()
