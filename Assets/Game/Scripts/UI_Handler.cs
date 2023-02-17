@@ -6,15 +6,19 @@ public class UI_Handler : MonoBehaviour
 {
     public enum UI_State
     {
-        Play, Pause
+        Playing, PauseMenu, MainMenu, OptionMenu
     };
 
-    public UI_State CurrentState;
+    public UI_State CurrentState = UI_State.MainMenu;
 
-    public GameObject MenuCanvas;
+    public GameObject Background;
+    public GameObject MainMenu;
+    public GameObject OptionMenu;
+    public GameObject PauseMenu;
+
     //void Awake()
     //{
-        
+
     //}
 
     // Update is called once per frame
@@ -22,7 +26,7 @@ public class UI_Handler : MonoBehaviour
     {
         switch (CurrentState)
         {
-            case UI_State.Play:
+            case UI_State.Playing:
                 if (Input.GetKeyDown(KeyCode.Escape))
                     Pause();
                 break;
@@ -34,18 +38,37 @@ public class UI_Handler : MonoBehaviour
     {
         switch (CurrentState)
         {
-
+            case UI_State.Playing:
+                Background.SetActive(true);
+                break;
+            case UI_State.PauseMenu:
+                PauseMenu.SetActive(false);
+                break;
+            case UI_State.MainMenu:
+                MainMenu.SetActive(false);
+                break;
+            case UI_State.OptionMenu:
+                OptionMenu.SetActive(false);
+                break;
         }
 
         switch (newState)
         {
-            case UI_State.Play:
-                MenuCanvas.SetActive(false);
+            case UI_State.Playing:
+                Background.SetActive(false);
                 Time.timeScale = 1.0f;
                 break;
-            case UI_State.Pause:
+            case UI_State.PauseMenu:
                 Time.timeScale = 0f;
-                MenuCanvas.SetActive(true);
+                PauseMenu.SetActive(true);
+                break;
+            case UI_State.MainMenu:
+                Time.timeScale = 0f;
+                MainMenu.SetActive(true);
+                break;
+            case UI_State.OptionMenu:
+                Time.timeScale = 0f;
+                OptionMenu.SetActive(true);
                 break;
         }
 
@@ -54,11 +77,21 @@ public class UI_Handler : MonoBehaviour
 
     public void Pause()
     {
-        SwitchUIState(UI_State.Pause);
+        SwitchUIState(UI_State.PauseMenu);
     }
 
     public void Play()
     {
-        SwitchUIState(UI_State.Play);
+        SwitchUIState(UI_State.Playing);
+    }
+
+    public void Option()
+    {
+        SwitchUIState(UI_State.OptionMenu);
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 }
