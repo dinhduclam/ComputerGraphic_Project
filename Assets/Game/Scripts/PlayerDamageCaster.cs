@@ -7,6 +7,7 @@ public class PlayerDamageCaster : MonoBehaviour
     private Collider _damageCasterCollider;
     public int Damage = 30;
     private List<Collider> _damagedTargetList;
+    public string targetTag;
 
     private void Awake()
     {
@@ -17,9 +18,9 @@ public class PlayerDamageCaster : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (_damagedTargetList.Contains(other))
+        if (other.tag==targetTag&& !_damagedTargetList.Contains(other))
         {
-            var targetCC = other.GetComponent<Character>(); //TODO: replace with Enemy
+            Enemy targetCC = other.GetComponent<Enemy>(); //TODO: replace with Enemy
 
             if (targetCC != null)
             {
