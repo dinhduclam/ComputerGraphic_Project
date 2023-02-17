@@ -90,6 +90,16 @@ public class UI_Handler : MonoBehaviour
         SwitchUIState(UI_State.OptionMenu);
     }
 
+    public void NewGame()
+    {
+        SwitchUIState(UI_State.Playing);
+    }
+
+    public void BackToMainMenu()
+    {
+        SwitchUIState(UI_State.MainMenu);
+    }
+
     public void Quit()
     {
         Application.Quit();
