@@ -46,7 +46,7 @@ public class Character : MonoBehaviour
                 _movementVelocity.Set(_playerInput.HorizontalInput, 0f, _playerInput.VerticalInput);
                 _movementVelocity.Normalize();
                 _movementVelocity = Quaternion.Euler(0, -45f, 0) * _movementVelocity;
-
+ 
                 MoveSpeed = WalkSpeed;
                 if (_cc.isGrounded && _playerInput.Run)
                 {
@@ -75,6 +75,8 @@ public class Character : MonoBehaviour
 
             case PlayerState.Attacking:
                 _movementVelocity = Vector3.zero;
+                break;
+            case PlayerState.BeingHit:
                 break;
         }
 
@@ -155,6 +157,7 @@ public class Character : MonoBehaviour
     public void ApplyDamage(int damage)
     {
         Health -= damage;
+        SwitchState(PlayerState.BeingHit);
     }
 
     public void EnableDamageCaster()
@@ -179,5 +182,8 @@ public class Character : MonoBehaviour
         if(Health>MaxHealth){
             Health=MaxHealth;
         }
+    }
+    public void BeingHitAnimationEnds(){
+        SwitchState(PlayerState.Normal);
     }
 }
