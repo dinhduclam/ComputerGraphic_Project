@@ -15,7 +15,7 @@ public class Enemy : MonoBehaviour
     private EnemyDamageCaster damageCaster;
 
     public enum EnemyState{
-        Normal, Attacking,Dead
+        Normal, Attacking,Dead,BeingHit
     };
 
     public EnemyState CurrentState;
@@ -50,8 +50,11 @@ public class Enemy : MonoBehaviour
                 break;
             case EnemyState.Dead:
                 return;
+            case EnemyState.BeingHit:
+                break;
             
         }
+
     }
 
     private void SwitchState(EnemyState newState){
@@ -68,6 +71,11 @@ public class Enemy : MonoBehaviour
                 DropItem();
                 Destroy(this.gameObject,3f);
                 break;
+            case EnemyState.BeingHit:
+                if(CurrentState!=EnemyState.Attacking){
+                    _Animator.SetTrigger("BeingHit");
+                }
+                break;
         }
 
         CurrentState = newState;
@@ -80,6 +88,7 @@ public class Enemy : MonoBehaviour
     public void ApplyDamage(int damage){
         
         currentHealth-=damage;
+        SwitchState(EnemyState.BeingHit);
         CheckHealth();
         Debug.Log(currentHealth);
 
@@ -109,5 +118,8 @@ public class Enemy : MonoBehaviour
             Instantiate(itemToDrop,transform.position,Quaternion.identity);
         }
 
+    }
+    public void BeingHitAnimationEnds(){
+        SwitchState(EnemyState.Normal);
     }
 }
