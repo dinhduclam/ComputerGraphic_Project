@@ -166,4 +166,18 @@ public class Character : MonoBehaviour
     {
         _playerDamageCaster.DisableDamageCaster();
     }
+    public void PickUpItem(PickUp item){
+        switch(item.Type){
+            case PickUp.PickUpType.Heal:
+                AddHealth(item.value);
+                break;
+        }
+    }
+
+    public void AddHealth(int health){
+        Health+=health;
+        if(Health>MaxHealth){
+            Health=MaxHealth;
+        }
+    }
 }
