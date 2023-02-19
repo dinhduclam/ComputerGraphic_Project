@@ -81,6 +81,7 @@ public class Character : MonoBehaviour
                 _movementVelocity = Vector3.zero;
                 break;
             case PlayerState.BeingHit:
+                _movementVelocity = Vector3.zero;
                 break;
         }
 

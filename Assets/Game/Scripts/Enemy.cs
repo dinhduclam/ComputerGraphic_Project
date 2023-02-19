@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -42,6 +43,7 @@ public class Enemy : MonoBehaviour
 
     private void CalculateEnemyMovement(){
         if(Vector3.Distance(_TargetPlayer.position,transform.position)>= _NavMeshAgent.stoppingDistance){
+            Debug.Log(_TargetPlayer.position);
             _NavMeshAgent.SetDestination(_TargetPlayer.position);
             _Animator.SetFloat("Speed",0.2f);
 
@@ -73,13 +75,10 @@ public class Enemy : MonoBehaviour
     }
 
     private void SwitchState(EnemyState newState){
-
-        
-
         switch(newState){
             case EnemyState.Attacking:
-                Quaternion newRotation=Quaternion.LookRotation(_TargetPlayer.position-transform.position);
-                transform.rotation=newRotation;
+                //Quaternion newRotation=Quaternion.LookRotation(_TargetPlayer.position-transform.position);
+                //transform.rotation=newRotation;
                 _Animator.SetTrigger("Attack");
                 break;
             case EnemyState.Dead:
@@ -103,21 +102,23 @@ public class Enemy : MonoBehaviour
     }
 
     public void FinishAttack(){
-        
-        SwitchState(EnemyState.Normal);
+        if (CurrentState != EnemyState.Dead)
+            SwitchState(EnemyState.Normal);
     }
-    public void ApplyDamage(int damage){
 
-        if(isInVincible){
+    public void ApplyDamage(int damage){
+        if (CurrentState == EnemyState.Dead || isInVincible)
+            return;
+
+        currentHealth-=damage;
+        if (currentHealth <= 0)
+        {
+            SwitchState(EnemyState.Dead);
             return;
         }
-        
-        currentHealth-=damage;
+
         SwitchState(EnemyState.BeingHit);
-        CheckHealth();
         Debug.Log(currentHealth);
-
-
     }
 
     IEnumerator DelayCancelInvinCible(){
@@ -127,30 +128,20 @@ public class Enemy : MonoBehaviour
 
     public void EnableDamageCaster(){
         damageCaster.EnableDamageCaster();
-
     }
 
     public void DisableDamageCaster(){
         damageCaster.DisableDamageCaster();
-
     }
-
-    private void CheckHealth(){
-        if(currentHealth<=0){
-            SwitchState(EnemyState.Dead);
-        }
-
-    }
-  
 
     public void DropItem(){
         if(itemToDrop!=null){
             Instantiate(itemToDrop,transform.position,Quaternion.identity);
         }
-
     }
     public void BeingHitAnimationEnds(){
-        SwitchState(EnemyState.Normal);
+        if (CurrentState != EnemyState.Dead)
+            SwitchState(EnemyState.Normal);
     }
 
     public void RotateToTarget(){
