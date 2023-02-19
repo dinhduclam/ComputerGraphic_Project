@@ -1,4 +1,6 @@
 using Unity.VisualScripting;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Character : MonoBehaviour
@@ -15,6 +17,8 @@ public class Character : MonoBehaviour
     public float RuningJump = 6f;
     public float _verticalVelocity = 0f;
     public float Gravity = -9.8f;
+    public bool isInVincible;
+    public float invincibleDuration=2f;
 
     private Vector3 _movementVelocity;
 
@@ -135,6 +139,8 @@ public class Character : MonoBehaviour
 
             case PlayerState.BeingHit:
                 _animator.SetTrigger("BeingHit");
+                isInVincible=true;
+                StartCoroutine(DelayCancelInvinCible());
                 break;
 
         }
@@ -156,9 +162,19 @@ public class Character : MonoBehaviour
 
     public void ApplyDamage(int damage)
     {
+        if(isInVincible){
+            return;
+        }
         Health -= damage;
         SwitchState(PlayerState.BeingHit);
     }
+    IEnumerator DelayCancelInvinCible(){
+        yield return new WaitForSeconds(invincibleDuration);
+        isInVincible=false;
+    }
+
+
+    
 
     public void EnableDamageCaster()
     {

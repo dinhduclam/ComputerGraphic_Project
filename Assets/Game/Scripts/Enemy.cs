@@ -10,12 +10,19 @@ public class Enemy : MonoBehaviour
     private  UnityEngine.AI.NavMeshAgent _NavMeshAgent;
     private Transform _TargetPlayer;
 
+    public bool isInVincible;
+    public float invincibleDuration=2f;
+
     public int maxHeal;
     public int currentHealth;
     private EnemyDamageCaster damageCaster;
 
+    private float currentSpawnTime;
+
+    public float spawnDuration=2f;
+
     public enum EnemyState{
-        Normal, Attacking,Dead,BeingHit
+        Normal, Attacking,Dead,BeingHit,Spawn
     };
 
     public EnemyState CurrentState;
@@ -29,6 +36,7 @@ public class Enemy : MonoBehaviour
         _NavMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         damageCaster=GetComponentInChildren<EnemyDamageCaster>();
         _TargetPlayer=GameObject.FindWithTag("Player").transform;
+        SwitchState(EnemyState.Spawn);
         
     }
 
@@ -52,12 +60,21 @@ public class Enemy : MonoBehaviour
                 return;
             case EnemyState.BeingHit:
                 break;
+            case EnemyState.Spawn:
+                isInVincible=false;
+                currentSpawnTime-=Time.deltaTime;
+                if(currentSpawnTime<=0){
+                    SwitchState(EnemyState.Normal);
+                }
+                break;
             
         }
 
     }
 
     private void SwitchState(EnemyState newState){
+
+        
 
         switch(newState){
             case EnemyState.Attacking:
@@ -76,6 +93,10 @@ public class Enemy : MonoBehaviour
                     _Animator.SetTrigger("BeingHit");
                 }
                 break;
+            case EnemyState.Spawn:
+                isInVincible=true;
+                currentSpawnTime=spawnDuration;
+                break;
         }
 
         CurrentState = newState;
@@ -86,6 +107,10 @@ public class Enemy : MonoBehaviour
         SwitchState(EnemyState.Normal);
     }
     public void ApplyDamage(int damage){
+
+        if(isInVincible){
+            return;
+        }
         
         currentHealth-=damage;
         SwitchState(EnemyState.BeingHit);
@@ -93,6 +118,11 @@ public class Enemy : MonoBehaviour
         Debug.Log(currentHealth);
 
 
+    }
+
+    IEnumerator DelayCancelInvinCible(){
+        yield return new WaitForSeconds(invincibleDuration);
+        isInVincible=false;
     }
 
     public void EnableDamageCaster(){
@@ -121,5 +151,11 @@ public class Enemy : MonoBehaviour
     }
     public void BeingHitAnimationEnds(){
         SwitchState(EnemyState.Normal);
+    }
+
+    public void RotateToTarget(){
+        if(CurrentState!=EnemyState.Dead){
+            transform.LookAt(_TargetPlayer,Vector3.up);
+        }
     }
 }
