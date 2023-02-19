@@ -43,7 +43,6 @@ public class Enemy : MonoBehaviour
 
     private void CalculateEnemyMovement(){
         if(Vector3.Distance(_TargetPlayer.position,transform.position)>= _NavMeshAgent.stoppingDistance){
-            Debug.Log(_TargetPlayer.position);
             _NavMeshAgent.SetDestination(_TargetPlayer.position);
             _Animator.SetFloat("Speed",0.2f);
 
@@ -117,7 +116,6 @@ public class Enemy : MonoBehaviour
         }
 
         SwitchState(EnemyState.BeingHit);
-        Debug.Log(currentHealth);
     }
 
     IEnumerator DelayCancelInvinCible(){

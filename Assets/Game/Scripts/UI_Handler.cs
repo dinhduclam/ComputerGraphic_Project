@@ -7,7 +7,7 @@ public class UI_Handler : MonoBehaviour
 {
     public enum UI_State
     {
-        Playing, PauseMenu, MainMenu, OptionMenu, GameOver
+        Playing, PauseMenu, MainMenu, OptionMenu, GameOver, GameFinish
     };
 
     public UI_State CurrentState = UI_State.MainMenu;
@@ -17,10 +17,41 @@ public class UI_Handler : MonoBehaviour
     public GameObject OptionMenu;
     public GameObject PauseMenu;
     public GameObject GameOverUI;
+    public GameObject GameFinishUI;
 
     void Awake()
     {
-        Time.timeScale = 0f;
+        switch (CurrentState)
+        {
+            case UI_State.Playing:
+                Time.timeScale = 1.0f;
+                Background.SetActive(false);
+                MainMenu.SetActive(false);
+                OptionMenu.SetActive(false);
+                PauseMenu.SetActive(false);
+                GameOverUI.SetActive(false);
+                GameFinishUI.SetActive(false);
+                break;
+            case UI_State.MainMenu:
+                Time.timeScale = 0f;
+                Background.SetActive(true);
+                MainMenu.SetActive(true);
+                OptionMenu.SetActive(false);
+                PauseMenu.SetActive(false);
+                GameOverUI.SetActive(false);
+                GameFinishUI.SetActive(false);
+                break;
+            case UI_State.GameFinish:
+                Time.timeScale = 0f;
+                Background.SetActive(true);
+                MainMenu.SetActive(false);
+                OptionMenu.SetActive(false);
+                PauseMenu.SetActive(false);
+                GameOverUI.SetActive(false);
+                GameFinishUI.SetActive(true);
+                break;
+        }
+        
     }
 
     // Update is called once per frame
@@ -55,6 +86,9 @@ public class UI_Handler : MonoBehaviour
             case UI_State.GameOver:
                 GameOverUI.SetActive(false);
                 break;
+            case UI_State.GameFinish:
+                GameFinishUI.SetActive(false);
+                break;
         }
 
         switch (newState)
@@ -78,6 +112,10 @@ public class UI_Handler : MonoBehaviour
             case UI_State.GameOver:
                 Time.timeScale = 0f;
                 GameOverUI.SetActive(true);
+                break;
+            case UI_State.GameFinish:
+                Time.timeScale = 0f;
+                GameFinishUI.SetActive(true);
                 break;
         }
 
@@ -106,7 +144,7 @@ public class UI_Handler : MonoBehaviour
 
     public void NewGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(0);
     }
 
     public void BackToMainMenu()
@@ -121,7 +159,11 @@ public class UI_Handler : MonoBehaviour
 
     public void GameOver()
     {
-        Debug.Log("sssssss");
         SwitchUIState(UI_State.GameOver);
+    }
+
+    public void GameFinish() 
+    {
+        SwitchUIState(UI_State.GameFinish);
     }
 }

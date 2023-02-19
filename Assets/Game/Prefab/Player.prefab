@@ -164,7 +164,7 @@ MonoBehaviour:
   Mana: 100
   JumpMana: 20
   AttackMana: 30
-  RunMana: 40
+  RunMana: 30
   ManaRecovery: 10
 --- !u!114 &6121711263739657767
 MonoBehaviour:

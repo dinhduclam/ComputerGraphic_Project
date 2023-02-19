@@ -77,16 +77,21 @@ public class Character : MonoBehaviour
 
                 if (_cc.isGrounded)
                 {
-                    if (_playerInput.MouseButtonDown && Mana > AttackMana)
+                    if (_playerInput.MouseButtonDown)
                     {
-                        SwitchState(PlayerState.Attacking);
-                        return;
+                        if (Mana > AttackMana)
+                            SwitchState(PlayerState.Attacking);
+                        else
+                            _playerInput.MouseButtonDown = false;
+                        
                     }
 
-                    if (_playerInput.SpaceKeyDown && Mana > JumpMana)
+                    if (_playerInput.SpaceKeyDown)
                     {
-                        SwitchState(PlayerState.Jump);
-                        return;
+                        if (Mana > JumpMana)
+                            SwitchState(PlayerState.Jump);
+                        else 
+                            _playerInput.SpaceKeyDown = false;
                     }
                 }
                 break;
@@ -108,6 +113,7 @@ public class Character : MonoBehaviour
             _verticalVelocity = 0;
 
         Mana += ManaRecovery * Time.deltaTime;
+        if (Mana > MaxMana) Mana = MaxMana;
     }
 
     private void SwitchState(PlayerState newState)

@@ -113,7 +113,7 @@ MonoBehaviour:
   moveSpeed: 0
   isInVincible: 0
   invincibleDuration: 2
-  maxHeal: 100
+  maxHeal: 50
   currentHealth: 0
   spawnDuration: 2
   CurrentState: 0
