@@ -10,11 +10,14 @@ public class Character : MonoBehaviour
     private PlayerInput _playerInput;
     private PlayerDamageCaster _playerDamageCaster;
 
+    public GameObject Canvas;
+    private UI_Handler UI_Handler;
+
     public float WalkSpeed = 3f;
     public float RunSpeed = 6f;
-    public float MoveSpeed = 2f;
-    public float WalkingJump = 2f;
-    public float RuningJump = 6f;
+    public float MoveSpeed = 3f;
+    public float WalkingJump = 3f;
+    public float RuningJump = 2f;
     public float _verticalVelocity = 0f;
     public float Gravity = -9.8f;
     public bool isInVincible;
@@ -33,12 +36,22 @@ public class Character : MonoBehaviour
     public int MaxHealth = 100;
     public int Health = 100;
 
+    //Mana
+    public float MaxMana = 100;
+    public float Mana = 100;
+    public float JumpMana = 20;
+    public float AttackMana = 30;
+    public float RunMana = 40;
+    public float ManaRecovery = 10;
+    
+
     private void Awake()
     {
         _cc = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
         _playerInput = GetComponent<PlayerInput>();
         _playerDamageCaster = GetComponentInChildren<PlayerDamageCaster>();
+        UI_Handler = Canvas.GetComponent<UI_Handler>();
     }
 
     private void FixedUpdate()
@@ -52,9 +65,10 @@ public class Character : MonoBehaviour
                 _movementVelocity = Quaternion.Euler(0, -45f, 0) * _movementVelocity;
  
                 MoveSpeed = WalkSpeed;
-                if (_cc.isGrounded && _playerInput.Run)
+                if (_cc.isGrounded && _playerInput.Run && Mana > 0)
                 {
                     MoveSpeed = RunSpeed;
+                    Mana -= RunMana * Time.deltaTime;
                 }
                 _animator.SetFloat("Speed", _movementVelocity.magnitude * MoveSpeed);
 
@@ -63,13 +77,13 @@ public class Character : MonoBehaviour
 
                 if (_cc.isGrounded)
                 {
-                    if (_playerInput.MouseButtonDown)
+                    if (_playerInput.MouseButtonDown && Mana > AttackMana)
                     {
                         SwitchState(PlayerState.Attacking);
                         return;
                     }
 
-                    if (_playerInput.SpaceKeyDown)
+                    if (_playerInput.SpaceKeyDown && Mana > JumpMana)
                     {
                         SwitchState(PlayerState.Jump);
                         return;
@@ -92,6 +106,8 @@ public class Character : MonoBehaviour
             _verticalVelocity += Gravity * Time.deltaTime;
         else
             _verticalVelocity = 0;
+
+        Mana += ManaRecovery * Time.deltaTime;
     }
 
     private void SwitchState(PlayerState newState)
@@ -124,11 +140,13 @@ public class Character : MonoBehaviour
                 break;
 
             case PlayerState.Jump:
+                Mana -= JumpMana;
                 _verticalVelocity += MoveSpeed == WalkSpeed? WalkingJump : RuningJump;
                 _animator.SetTrigger("Jump");
                 break;
 
             case PlayerState.Attacking:
+                Mana-= AttackMana;
                 _animator.SetTrigger("Attack");
                 //attackStartTime = Time.time;
                 break;
@@ -136,6 +154,7 @@ public class Character : MonoBehaviour
             case PlayerState.Dead:
                 _cc.enabled = false;
                 _animator.SetTrigger("Dead");
+                StartCoroutine(DelayGameOver(2f));
                 break;
 
             case PlayerState.BeingHit:
@@ -166,16 +185,30 @@ public class Character : MonoBehaviour
         if(isInVincible){
             return;
         }
+
         Health -= damage;
+
+        if (Health <= 0)
+        {
+            SwitchState(PlayerState.Dead); 
+            return;
+        }
         SwitchState(PlayerState.BeingHit);
     }
+
     IEnumerator DelayCancelInvinCible(){
         yield return new WaitForSeconds(invincibleDuration);
         isInVincible=false;
     }
 
+    IEnumerator DelayGameOver(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        UI_Handler.GameOver();
+    }
 
-    
+
+
 
     public void EnableDamageCaster()
     {
@@ -203,4 +236,14 @@ public class Character : MonoBehaviour
     public void BeingHitAnimationEnds(){
         SwitchState(PlayerState.Normal);
     }
+
+    public float GetHealthPercent()
+    {
+        return (float)Health/MaxHealth;
+    }
+    public float GetManaPercent()
+    {
+        return Mana / MaxMana;
+    }
+
 }

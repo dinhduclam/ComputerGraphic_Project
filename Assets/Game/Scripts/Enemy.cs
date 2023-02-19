@@ -69,7 +69,6 @@ public class Enemy : MonoBehaviour
                     SwitchState(EnemyState.Normal);
                 }
                 break;
-            
         }
 
     }

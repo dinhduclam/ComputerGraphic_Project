@@ -147,11 +147,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d1d9919fed7cfd4788504dc9bd7ff7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WalkSpeed: 2
+  Canvas: {fileID: 0}
+  WalkSpeed: 3
   RunSpeed: 6
-  MoveSpeed: 2
+  MoveSpeed: 3
   WalkingJump: 3
-  RuningJump: 3
+  RuningJump: 2
   _verticalVelocity: 0
   Gravity: -10
   isInVincible: 0
@@ -159,6 +160,12 @@ MonoBehaviour:
   CurrentState: 0
   MaxHealth: 100
   Health: 100
+  MaxMana: 100
+  Mana: 100
+  JumpMana: 20
+  AttackMana: 30
+  RunMana: 40
+  ManaRecovery: 10
 --- !u!114 &6121711263739657767
 MonoBehaviour:
   m_ObjectHideFlags: 0

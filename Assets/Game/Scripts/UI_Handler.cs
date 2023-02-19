@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UI_Handler : MonoBehaviour
 {
     public enum UI_State
     {
-        Playing, PauseMenu, MainMenu, OptionMenu
+        Playing, PauseMenu, MainMenu, OptionMenu, GameOver
     };
 
     public UI_State CurrentState = UI_State.MainMenu;
@@ -15,6 +16,7 @@ public class UI_Handler : MonoBehaviour
     public GameObject MainMenu;
     public GameObject OptionMenu;
     public GameObject PauseMenu;
+    public GameObject GameOverUI;
 
     void Awake()
     {
@@ -50,6 +52,9 @@ public class UI_Handler : MonoBehaviour
             case UI_State.OptionMenu:
                 OptionMenu.SetActive(false);
                 break;
+            case UI_State.GameOver:
+                GameOverUI.SetActive(false);
+                break;
         }
 
         switch (newState)
@@ -69,6 +74,10 @@ public class UI_Handler : MonoBehaviour
             case UI_State.OptionMenu:
                 Time.timeScale = 0f;
                 OptionMenu.SetActive(true);
+                break;
+            case UI_State.GameOver:
+                Time.timeScale = 0f;
+                GameOverUI.SetActive(true);
                 break;
         }
 
@@ -90,9 +99,14 @@ public class UI_Handler : MonoBehaviour
         SwitchUIState(UI_State.OptionMenu);
     }
 
-    public void NewGame()
+    public void StartGame()
     {
         SwitchUIState(UI_State.Playing);
+    }
+
+    public void NewGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void BackToMainMenu()
@@ -103,5 +117,11 @@ public class UI_Handler : MonoBehaviour
     public void Quit()
     {
         Application.Quit();
+    }
+
+    public void GameOver()
+    {
+        Debug.Log("sssssss");
+        SwitchUIState(UI_State.GameOver);
     }
 }
