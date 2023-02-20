@@ -18,7 +18,7 @@ public class UI_Handler : MonoBehaviour
     public GameObject PauseMenu;
     public GameObject GameOverUI;
     public GameObject GameFinishUI;
-
+    public GameObject GameUIHandler;
     void Awake()
     {
         switch (CurrentState)
@@ -31,6 +31,7 @@ public class UI_Handler : MonoBehaviour
                 PauseMenu.SetActive(false);
                 GameOverUI.SetActive(false);
                 GameFinishUI.SetActive(false);
+                GameUIHandler.SetActive(true);
                 break;
             case UI_State.MainMenu:
                 Time.timeScale = 0f;
@@ -40,6 +41,7 @@ public class UI_Handler : MonoBehaviour
                 PauseMenu.SetActive(false);
                 GameOverUI.SetActive(false);
                 GameFinishUI.SetActive(false);
+                GameUIHandler.SetActive(false);
                 break;
             case UI_State.GameFinish:
                 Time.timeScale = 0f;
@@ -49,6 +51,7 @@ public class UI_Handler : MonoBehaviour
                 PauseMenu.SetActive(false);
                 GameOverUI.SetActive(false);
                 GameFinishUI.SetActive(true);
+                GameUIHandler.SetActive(false);
                 break;
         }
         
@@ -73,6 +76,7 @@ public class UI_Handler : MonoBehaviour
         {
             case UI_State.Playing:
                 Background.SetActive(true);
+                GameUIHandler.SetActive(false);
                 break;
             case UI_State.PauseMenu:
                 PauseMenu.SetActive(false);
@@ -95,6 +99,7 @@ public class UI_Handler : MonoBehaviour
         {
             case UI_State.Playing:
                 Background.SetActive(false);
+                GameUIHandler.SetActive(true);
                 Time.timeScale = 1.0f;
                 break;
             case UI_State.PauseMenu:

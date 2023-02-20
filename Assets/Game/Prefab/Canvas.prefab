@@ -3880,13 +3880,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af42200c4f99a2645a30863efa82e6a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentState: 5
+  CurrentState: 2
   Background: {fileID: 2095900564145627541}
   MainMenu: {fileID: 2095900563114088677}
   OptionMenu: {fileID: 2095900563571362883}
   PauseMenu: {fileID: 2095900562644875363}
   GameOverUI: {fileID: 2095900562996105357}
   GameFinishUI: {fileID: 1574569136}
+  GameUIHandler: {fileID: 0}
 --- !u!1 &2095900564443671283
 GameObject:
   m_ObjectHideFlags: 0

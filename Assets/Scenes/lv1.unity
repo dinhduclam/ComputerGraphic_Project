@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -15448,14 +15448,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
-    - target: {fileID: 2095900564422728427, guid: e804e000645e16a4f8b70c381e04e3a0, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2095900564422728432, guid: e804e000645e16a4f8b70c381e04e3a0, type: 3}
-      propertyPath: CurrentState
-      value: 2
-      objectReference: {fileID: 0}
+      propertyPath: GameUIHandler
+      value: 
+      objectReference: {fileID: 1930866670}
     - target: {fileID: 2095900564422728439, guid: e804e000645e16a4f8b70c381e04e3a0, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -70456,6 +70452,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 32949ef0637572547b3ec7683f284b74, type: 3}
+--- !u!1 &1930866670 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8411790306345415816, guid: da17bb0e6cf763f44a6a9c4f0d4786a1, type: 3}
+  m_PrefabInstance: {fileID: 749701810}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1935963077
 PrefabInstance:
   m_ObjectHideFlags: 0
